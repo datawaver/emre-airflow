@@ -20,35 +20,21 @@ Before getting started with emre-airflow, ensure that you have the following pre
 
 ## Installation
 
-Let's get started with the Amazon Managed Workflows for Apache Airflow (MWAA) environment locally](https://github.com/aws/aws-mwaa-local-runner) ...
+Let's get started with the Amazon Managed Workflows for Apache Airflow (MWAA) environment locally](https://github.com/aws/aws-mwaa-local-runner) and a Spark cluster from `datawaver/spark-docker`...
 
-```
-git clone https://github.com/aws/aws-mwaa-local-runner.git
-cd aws-mwaa-local-runner
-./mwaa-local-env build-image
-./mwaa-local-env start
-```
 
-Now let's set up the local SPark cluster using `emre-spark` ...
-
-```
-[[ "${PWD##*/}" == "aws-mwaa-local-runner" ]] && cd ..
-git clone https://github.com/datawaver/spark-docker.git
-cd spark-docker
-export MASTER_SPARK_UI_PORT=8888
-just start master
+```bash
+just init
 ```
 
 ## Using
 
-By default, the bootstrap.sh script creates a username and password for your local Airflow environment.
-
-* Username: admin
-* Password: test
-
 ### Airflow UI
 
 Open the Apache Airlfow UI: http://localhost:8080/.
+
+* Username: admin
+* Password: test
 
 ## Contributing
 
