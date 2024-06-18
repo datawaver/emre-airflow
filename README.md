@@ -14,9 +14,9 @@ Later we will configure the Airflow to run Spark jobs on an AWS EMR cluster with
 
 Before getting started with emre-airflow, ensure that you have the following prerequisites installed:
 
-- Docker
-- Docker Compose
-- AWS CLI
+- Docker: [Install Docker](https://docs.docker.com/get-docker/)
+- Docker Compose: [Install Docker Compose](https://docs.docker.com/compose/install/)
+- justfile: [Install justfile](https://github.com/casey/just#installation)
 
 ## Installation
 
@@ -29,11 +29,16 @@ cd aws-mwaa-local-runner
 ./mwaa-local-env start
 ```
 
-Noow let's set up the local SPark cluster using `emre-spark` ...
+Now let's set up the local SPark cluster using `emre-spark` ...
 
 ```
-
+[[ "${PWD##*/}" == "aws-mwaa-local-runner" ]] && cd ..
+git clone https://github.com/datawaver/spark-docker.git
+cd spark-docker
+export MASTER_SPARK_UI_PORT=8888
+just start master
 ```
+
 ## Using
 
 By default, the bootstrap.sh script creates a username and password for your local Airflow environment.
