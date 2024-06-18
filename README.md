@@ -2,6 +2,14 @@
 
 emre-airflow is a project that sets up an Apache Airflow instance using Docker and utilizes 'emre-config' to configure an AWS EMR cluster. This README provides an overview of the project, installation instructions, usage guidelines, and other relevant information.
 
+The current version of emre-airflow is a work in progress and is not yet ready for production use. 
+We are actively interating over the project and will update this README as we make progress.
+
+## Overview
+
+We are setting up a local Airflow and a local Spark cluster to run Spark jobs on the local cluster. 
+Later we will configure the Airflow to run Spark jobs on an AWS EMR cluster with the configuration of 'emre-config'.
+
 ## Prerequisites
 
 Before getting started with emre-airflow, ensure that you have the following prerequisites installed:
@@ -9,31 +17,33 @@ Before getting started with emre-airflow, ensure that you have the following pre
 - Docker
 - Docker Compose
 - AWS CLI
-- 'emre-config' (install it as described in the [emre-config project](https://github.com/datawaver/emre-config))
 
 ## Installation
 
-To install emre-airflow, follow these steps:
+Let's get started with the Amazon Managed Workflows for Apache Airflow (MWAA) environment locally](https://github.com/aws/aws-mwaa-local-runner) ...
 
-1. Clone the repository:   ```   git clone https://github.com/your-username/emre-airflow.git   ```
+```
+git clone https://github.com/aws/aws-mwaa-local-runner.git
+cd aws-mwaa-local-runner
+./mwaa-local-env build-image
+./mwaa-local-env start
+```
 
-2. Navigate to the project directory:   ```   cd emre-airflow   ```
+Noow let's set up the local SPark cluster using `emre-spark` ...
 
-3. Build the Docker image:   ```   docker-compose build   ```
+```
 
-4. Set up the necessary environment variables:   ```   export EMRE_CONFIG=/path/to/emre/config   ```
+```
+## Using
 
-## Usage
+By default, the bootstrap.sh script creates a username and password for your local Airflow environment.
 
-To start using emre-airflow, follow these steps:
+* Username: admin
+* Password: test
 
-1. Start the Airflow containers:   ```   docker-compose up -d   ```
+### Airflow UI
 
-2. Access the Airflow web interface by navigating to `http://localhost:8080` in your web browser.
-
-3. Trigger and monitor your DAGs through the Airflow web interface.
-
-4. To stop the Airflow containers:   ```   docker-compose down   ```
+Open the Apache Airlfow UI: http://localhost:8080/.
 
 ## Contributing
 
@@ -42,3 +52,8 @@ This project is in the early stages of development. If you would like to contrib
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Further Links
+
+* [Amazon Managed Workflows for Apache Airflow (MWAA) environment locally](https://github.com/aws/aws-mwaa-local-runner)
+* [emre spark](https://github.com/datawaver/emre-spark.git)
