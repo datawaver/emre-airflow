@@ -1,13 +1,40 @@
 #!/usr/bin/env just
 
+AIRFLOW_VERSION := "2.9.2"
+
 @default:
   just --list
 
 # check requirements
 init:
   @echo "Checking requirements ..."
-  @echo "Default amount of memory should be 4GB or ideially 8GB"
+  @echo "Default amount of memory should be 4GB or ideally 8GB"
   # Source: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#before-you-begin
   docker run --rm "debian:bookworm-slim" bash -c 'numfmt --to iec $(echo $(($(getconf _PHYS_PAGES) * $(getconf PAGE_SIZE))))'
+  curl -sLfO 'https://airflow.apache.org/docs/apache-airflow/{{AIRFLOW_VERSION}}/docker-compose.yaml'
+  curl -LfO 'https://airflow.apache.org/docs/apache-airflow/{{AIRFLOW_VERSION}}/airflow.sh'
+  chmod +x airflow.sh
+  mkdir -p ./dags ./logs ./plugins ./config
+  @echo "AIRFLOW_UID=$(id -u)" > .env
+  docker compose up airflow-init
+  @echo "👉 Now you can run 'just run' to start the environment"
+  
+clean:
+  # source: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#cleaning-up-the-environment
+  docker compose down --volumes --remove-orphans
+  rm -rf ./dags ./logs ./plugins ./config
+  rm -f .env
+  rm -f airflow.sh
+  # rm -f docker-compose.yaml
 
+@run:
+  docker compose up -d
+  sleep 30
+  echo 
+  just info
 
+@info:
+  docker compose ps
+  echo 
+  echo "The webserver is available at: http://localhost:8080 with airflow/airflow as login/password"
+  echo "👉 More on https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#accessing-the-environment"
