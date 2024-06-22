@@ -2,7 +2,7 @@
 
 emre-airflow is a project that sets up an Apache Airflow instance using Docker and utilizes 'emre-config' to configure an AWS EMR cluster. This README provides an overview of the project, installation instructions, usage guidelines, and other relevant information.
 
-The current version of emre-airflow is a work in progress and is not yet ready for production use. 
+The current version of emre-airflow is a *work in progress* and is not yet ready for production use. 
 We are actively interating over the project and will update this README as we make progress.
 
 ## Overview

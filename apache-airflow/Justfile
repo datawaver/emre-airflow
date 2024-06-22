@@ -1,0 +1,13 @@
+#!/usr/bin/env just
+
+@default:
+  just --list
+
+# check requirements
+init:
+  @echo "Checking requirements ..."
+  @echo "Default amount of memory should be 4GB or ideially 8GB"
+  # Source: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#before-you-begin
+  docker run --rm "debian:bookworm-slim" bash -c 'numfmt --to iec $(echo $(($(getconf _PHYS_PAGES) * $(getconf PAGE_SIZE))))'
+
+

@@ -22,6 +22,9 @@ run:
     echo "👉 UI Access Airflow: http://localhost:8080"
     docker-compose -p emre-airflow -f aws-mwaa-local-runner/docker/docker-compose-local.yml exec local-runner bash
 
+_apache_airflow:
+    @just apache-airflow/run
+
 _aws-mwaa-local-runner:
     #!/bin/bash
     set -euxo pipefail
