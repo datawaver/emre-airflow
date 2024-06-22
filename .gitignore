@@ -1,2 +1,9 @@
 aws-mwaa-local-runner
 spark-docker
+apache-airflow/docker-compose.yaml
+apache-airflow/.env
+apache-airflow/config
+apache-airflow/dags
+apache-airflow/logs
+apache-airflow/plugins
+apache-airflow/airflow.sh
