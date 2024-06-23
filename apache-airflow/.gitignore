@@ -1,0 +1,7 @@
+.env
+docker-compose.yaml
+config
+dags
+logs
+plugins
+airflow.sh
