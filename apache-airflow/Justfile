@@ -33,6 +33,13 @@ clean:
   echo 
   just info
 
+alias checkout: dev
+# dev: clone the airflow repo
+dev:
+  git clone https://github.com/apache/airflow.git
+  
+
+
 @info:
   docker compose ps
   echo 
