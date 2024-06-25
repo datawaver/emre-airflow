@@ -2,46 +2,93 @@
 
 AIRFLOW_VERSION := "2.9.2"
 
+# show some help
 @default:
   just --list
+  echo 
+  echo "👉 Run 'just init' to check requirements and download and initialize airflow."
 
 # check requirements
 init:
   @echo "Checking requirements ..."
   @echo "Default amount of memory should be 4GB or ideally 8GB"
   # Source: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#before-you-begin
-  docker run --rm "debian:bookworm-slim" bash -c 'numfmt --to iec $(echo $(($(getconf _PHYS_PAGES) * $(getconf PAGE_SIZE))))'
+  @docker run --rm "debian:bookworm-slim" bash -c 'numfmt --to iec $(echo $(($(getconf _PHYS_PAGES) * $(getconf PAGE_SIZE))))'
   curl -sLfO 'https://airflow.apache.org/docs/apache-airflow/{{AIRFLOW_VERSION}}/docker-compose.yaml'
   curl -LfO 'https://airflow.apache.org/docs/apache-airflow/{{AIRFLOW_VERSION}}/airflow.sh'
-  chmod +x airflow.sh
-  mkdir -p ./dags ./logs ./plugins ./config
+  @chmod +x airflow.sh
+  mkdir -p ./logs ./plugins ./config
+  ln -s ../dags 
   @echo "AIRFLOW_UID=$(id -u)" > .env
   docker compose up airflow-init
+  @just md5sum docker-compose.yaml > .docker-compose.yaml.md5
   @echo "👉 Now you can run 'just run' to start the environment"
-  
-clean:
+
+
+# remove airflow local clone and some created files
+@clean:
   # source: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#cleaning-up-the-environment
-  docker compose down --volumes --remove-orphans
+  echo "👉 Stopping docker and cleaning up images ..."
+  docker compose down --volumes --remove-orphans || true
+  echo "👉 Cleaning up files ..."
   rm -rf ./dags ./logs ./plugins ./config
   rm -f .env
   rm -f airflow.sh
-  # rm -f docker-compose.yaml
+  just rm_if_modified docker-compose.yaml
+  echo "✅ Deleted everything but the cloned airflow. To remove really everything run 'just clean-all'"
 
+clean-all: clean
+  rm -rf airflow
+  rm -f .docker-compose.yaml.md5 docker-compose.yaml
+
+[private]
+rm_if_modified filename:
+  #!/bin/bash
+  if [ -f .{{filename}}.md5 ]; then
+    if [ ! -f {{filename}} ]; then
+      rm -f .{{filename}}.md5
+      exit 0
+    fi
+    if [ "$(cat .{{filename}}.md5)" = "$(just md5sum {{filename}})" ]; then
+      rm -f {{filename}}
+      rm -f .{{filename}}.md5
+    else 
+      echo "💁 I did not remove the {{filename}} file as it seems to be modified."
+    fi
+  fi
+
+alias start := run
+# start the airflow environment
 @run:
   docker compose up -d
-  sleep 30
+  echo "👉 Airflow is starting ..."
+  sleep 15
   echo 
   just info
 
-alias checkout: dev
+@stop:
+  docker compose down 
+
+alias checkout := dev
 # dev: clone the airflow repo
 dev:
   git clone https://github.com/apache/airflow.git
   
 
-
 @info:
   docker compose ps
   echo 
+  ./airflow.sh info
   echo "The webserver is available at: http://localhost:8080 with airflow/airflow as login/password"
   echo "👉 More on https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#accessing-the-environment"
+
+[private]
+md5sum filename:
+    #!/bin/bash
+    if command -v md5sum &>/dev/null; then  
+      md5sum "{{filename}}" | cut -d' ' -f1 
+    elif command -v md5 &>/dev/null; then 
+      md5 "{{filename}}" | cut -d' ' -f4
+    else
+      echo "No md5sum or md5 command found"
+    fi

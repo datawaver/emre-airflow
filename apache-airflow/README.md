@@ -6,7 +6,7 @@ This is motivated by the fact, that the MWAA (AWS Managed Workflows for Apache A
 ## Features:
 
 * Out of the box, fast setup according to the [Apache Airflow Docker Compose](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html) documentation
-* 
+* configured with your own [dags](dags).
 
 ## Prerequisites
 
@@ -15,6 +15,11 @@ This is motivated by the fact, that the MWAA (AWS Managed Workflows for Apache A
     - For MacOS you can use: [Orbstack](https://orbstack.dev/download) e.g. `brew install orbstack`
     - For Windows: [Install Docker from docker.com](https://docs.docker.com/get-docker/)
     - For Linux I think you know how to install Docker and Docker Compose ;) 
+
+## Usage
+
+Check out the justfile for the available commands with 'just'.
+
 
 ## Development
 
