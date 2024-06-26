@@ -15,6 +15,7 @@
     echo "🧹 Cleaning up ..."
     rm -rf aws-mwaa-local-runner
     rm -rf spark-docker
+    rm -rf .venv
     echo "Done."
 
 # Access the Airflow instance
@@ -47,6 +48,12 @@ _spark-docker:
     cd spark-docker
     echo "🎬 Starting Spark ..."
     export MASTER_SPARK_UI_PORT=8888 && just start master
+
+# setup python venv with requirements
+python:
+    python3 -m venv .venv && source .venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt 
+    @echo "🎉 Python venv is ready to use. 👉 please run:"
+    @echo "source .venv/bin/activate"
 
 # ----------------------------------------
 # Additional recipes for debugging and testing
